@@ -1,4 +1,43 @@
+# encoding: utf-8
 Mybasic::Application.routes.draw do
+  
+  # 用户系统devise 重写了注册组件
+  devise_for :users, :controllers => {:registrations => "registrations"} 
+
+  devise_for :users do
+    get '/users/sign_out' => 'devise/sessions#destroy'
+  end
+  
+  devise_scope :user do
+    # 等待邮箱验证
+    match "awaiting_confirmation", :to => "registrations#awaiting_confirmation", :via => [:get], :as => "awaiting_confirmation"
+    # 微博用户授权以后如果没有注册就会来这个地址注册
+    # match "users/weibo_sign_up", :to => "registrations#weibo_new", :via => [:get], :as => "new_weibo_user_registration"       
+  end
+
+  # 管理员模块
+  namespace :admin do
+    root :to => "base#index"
+    resources :users do
+      # 角色分配
+      get 'roles', :on => :member
+      # 角色分配 写操作
+      post 'assign_roles', :on => :member
+      # 锁定用户
+      post 'lock', :on => :member
+      # 解锁用户
+      post 'unlock', :on => :member
+    end
+    resources :roles do
+      # 权限分配
+      get 'permissions', :on => :member
+      # 权限分配 写操作
+      post 'assign_permissions', :on => :member
+    end
+
+    resources :permissions
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -48,7 +87,7 @@ Mybasic::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
+  root :to => 'home#index'
 
   # See how all your routes lay out with "rake routes"
 

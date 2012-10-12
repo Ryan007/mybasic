@@ -64,4 +64,17 @@ Mybasic::Application.configure do
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
+  config.host_url = "http://crm.xiaoma.com/"
+  config.staticfile_server_url = "http://crm.xiaoma.com/"
+   
+  config.action_mailer.default_url_options = { :host => 'crm.xiaoma.com' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address              => "smtp.qq.com",
+    :port                 => 25,
+    :domain               => 'www.xiaoma.com',
+    :user_name            => 'noreply@xiaoma.com',
+    :password             => 'ashdauisdqib',
+    :authentication       => 'plain',
+    :enable_starttls_auto => true  }
 end
